@@ -20,7 +20,7 @@ The tag uses two separate ESP32-C6 boards because the ESP32 radio cannot scan fo
 
 | Component | Technology | Location |
 |---|---|---|
-| Tag (main board) | Beetle ESP32-C6, FreeRTOS | `firmware/beetle_c6_main/new_trakn_tag/` |
+| Tag (main board) | Beetle ESP32-C6, FreeRTOS | `firmware/beetle_c6_main/beetle_c6_main/` |
 | Tag (scanner board) | Beetle ESP32-C6 | `firmware/beetle_c6_scanner/` |
 | Backend server | Python 3.11, FastAPI, PostgreSQL 16 | `backend/` |
 | Web mapping tool | React 18, Konva.js, Zustand | `web_app/web-react/` |
@@ -66,7 +66,7 @@ A 10-reading confirmation window (~10 seconds) is required before committing a f
 
 ## Firmware
 
-**Active firmware:** `firmware/beetle_c6_main/new_trakn_tag/new_trakn_tag.ino`
+**Active firmware:** `firmware/beetle_c6_main/beetle_c6_main/beetle_c6_main.ino`
 
 ### FreeRTOS Tasks
 
@@ -246,7 +246,7 @@ GridPoint     (id, floor_plan_id, x, y)
 ```
 TRAKN-Tracking-Indoors/
 ├── firmware/
-│   ├── beetle_c6_main/new_trakn_tag/   ← Active tag firmware
+│   ├── beetle_c6_main/beetle_c6_main/  ← Active tag firmware
 │   └── beetle_c6_scanner/              ← Scanner board firmware
 ├── backend/
 │   └── app/
