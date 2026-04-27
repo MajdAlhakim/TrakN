@@ -11,12 +11,46 @@ The system was deployed and tested in Building H07, C Corridor at Qatar Universi
 ## System Architecture
 
 ```
-[Wearable Tag] ──HTTPS──▶ [GCP Cloud Server] ──WebSocket──▶ [Parent Android App]
-      │                           │
- [Scanner Board] ──UART──▶ [Tag]      [PostgreSQL DB]
+┌─────────────────────────────────┐
+│         Wearable Tag            │
+│                                 │
+│  ┌─────────────┐  UART (115200) │
+│  │ Scanner     │─────────────▶  │
+│  │ ESP32-C6    │  AP list JSON  │
+│  │ (Wi-Fi scan │                │
+│  │  only)      │  ┌───────────┐ │
+│  └─────────────┘  │ Main      │ │
+│                   │ ESP32-C6  │ │
+│  MPU6050 IMU ────▶│ (IMU +    │ │
+│  BMP180 Baro ────▶│  HTTPS)   │ │
+│                   └─────┬─────┘ │
+└─────────────────────────┼───────┘
+                          │ HTTPS POST every ~1s
+                          ▼
+              ┌───────────────────────┐
+              │   GCP Cloud Server    │
+              │                       │
+              │  Nginx (port 443)     │
+              │      │                │
+              │  FastAPI backend      │
+              │  ┌────────────────┐   │
+              │  │ PDR engine     │   │
+              │  │ RSSI localizer │   │
+              │  │ Sensor fusion  │   │
+              │  └────────┬───────┘   │
+              │           │           │
+              │  PostgreSQL 16        │
+              └───────────┼───────────┘
+                          │ WebSocket (WSS)
+                          ▼
+              ┌───────────────────────┐
+              │  Parent Android App   │
+              │  Live floor plan view │
+              │  Distance alerts      │
+              └───────────────────────┘
 ```
 
-The tag is built from two separate ESP32-C6 boards. One board handles Wi-Fi scanning only (never connects), and the other handles IMU sampling and HTTPS posting (never scans). This split was necessary because the ESP32 cannot scan and maintain a TLS connection at the same time — combining both on one board caused scan blackouts and TLS timeouts.
+The tag uses two separate ESP32-C6 boards because the ESP32 radio cannot scan for APs and maintain a TLS connection simultaneously — running both on one board caused scan blackouts and HTTPS timeouts. The scanner board sweeps channels passively every 5 seconds and sends the AP list over UART to the main board, which handles IMU sampling and HTTPS posting exclusively.
 
 ---
 
@@ -270,4 +304,11 @@ TRAKN-Tracking-Indoors/
 
 ## Team
 
-Senior Design Project — Qatar University, Department of Computer Engineering, 2025–2026.
+**CE M G#33** — Senior Design Project, Qatar University, Department of Computer Engineering, 2025–2026.
+
+| Name | Student ID |
+|---|---|
+| Abdulla AlAnsari | 202106096 |
+| Majd Alhakim | 202109732 |
+| Amar Badran | 202110679 |
+| Amr Mohmad | 202104444 |
