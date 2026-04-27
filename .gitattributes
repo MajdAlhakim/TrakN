@@ -1,0 +1,10 @@
+# Normalize line endings
+* text=auto
+
+# Binary files — no diff/merge
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.bin binary
+*.apk binary
+*.hprof binary

@@ -1,0 +1,51 @@
+services:
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: changeme
+      POSTGRES_DB: localization
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin -d localization" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://admin:changeme@db:5432/localization
+      GATEWAY_API_KEY: "580a92b1cad8ad81b7ae90c23fb222443d9c87aac4ce4a7728a3f9e99e3e4990"
+      BEETLE_RSSI_OFFSET_DB: "4.0"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - uploads_data:/srv/backend/uploads
+    # Backend is NOT exposed on public port 8000 anymore
+    # All traffic comes through Nginx on 443
+    expose:
+      - "8000"
+
+  nginx:
+    image: nginx:1.25-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ./web_app/web:/usr/share/nginx/html/tool:ro
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  uploads_data:

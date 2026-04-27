@@ -1,0 +1,41 @@
+# Python
+.env
+__pycache__/
+*.pyc
+.pytest_cache/
+*.pkl
+*.egg-info/
+
+# Virtual environments
+tf-env/
+venv/
+.venv/
+
+# Node
+node_modules/
+dist/
+build/
+
+# Android build artifacts
+*.hprof
+*.apk
+tools/trakn-ap-tool/.gradle/
+tools/trakn-ap-tool/app/build/
+tools/trakn-ap-tool/build/
+tools/trakn-parent-app/.gradle/
+tools/trakn-parent-app/app/build/
+tools/trakn-parent-app/build/
+
+# IDE
+**/.idea/
+*.iml
+.vscode/
+.vs/
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
