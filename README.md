@@ -268,6 +268,8 @@ TRAKN-Tracking-Indoors/
 
 **CE M G#33** — Senior Design Project, Qatar University, Department of Computer Engineering, 2025–2026.
 
+**Supervisor:** Dr. Uvais Qidwai
+
 | Name | Student ID |
 |---|---|
 | Abdulla AlAnsari | 202106096 |
